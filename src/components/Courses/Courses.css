@@ -1,0 +1,14 @@
+.courses {
+    border: 2px solid skyblue;
+    margin: 1rem;
+}
+
+.courses-container {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+
+.courses-container-add-new-course {
+    margin: 1rem;
+}

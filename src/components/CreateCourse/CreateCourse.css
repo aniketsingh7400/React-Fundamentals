@@ -1,0 +1,68 @@
+.create-course {
+    border: 2px solid skyblue;
+    margin: 1rem;
+}
+
+.create-course-title {
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.create-course-description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 1rem;
+}
+
+.create-course-description-text {
+    width: 99.2%;
+    border: 2px solid gold;
+    outline: none;
+}
+
+.create-course-description-text:focus {
+    border: 2px solid blue;
+}
+
+.create-course-add-authors {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-course-add-author-create,
+.create-course-add-author-added {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.create-course-add-author-create-author,
+.create-course-add-author-added-duration,
+.create-course-add-author-create-list,
+.create-course-add-author-added-list {
+    margin: 0 1rem;
+    width: 30%;
+}
+
+.authors {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.authors Button {
+    margin: 0.5rem 0;
+}
+
+.create-course-add-author-create-author Button {
+    margin: 0.5rem 0;
+}
+
+.create-course-duration {
+    font-size:x-large;
+    margin: 1rem;
+}
