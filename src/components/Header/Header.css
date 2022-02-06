@@ -1,0 +1,22 @@
+.header {
+    display: flex;
+    border: 2px solid orangered;
+    margin: 1rem;
+}
+
+.header-logo {
+    width: 100%;
+    margin: 1rem;
+}
+
+.header-username {
+    width: 30%;
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.header-username strong {
+    margin: 1rem;
+}

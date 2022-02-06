@@ -1,0 +1,22 @@
+.course-card {
+    border: 2px solid green;
+    display: flex;
+    margin: 1rem;
+}
+
+.course-card-course-details {
+    width: 70%;
+    margin: 1rem;
+}
+
+.course-card-author-details {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 1rem 1rem 1rem 7rem;
+}
+
+h1 {
+    margin-bottom: 1rem;
+}
