@@ -55,18 +55,6 @@ const CreateCourse = (props) => {
 			},
 		]);
 		setAuthorsList(authorsList.filter((author) => author.id !== authorId));
-		addAuthorsToFormDetails(authorId);
-	};
-
-	const addAuthorsToFormDetails = (authorId) => {
-		// formDetails gets updated with authorsId
-		let authorsId = [];
-		authorsList.forEach((author) => {
-			if (author.id === authorId) {
-				authorsId.push(author.id);
-			}
-		});
-		setFormDetails({ ...formDetails, authors: authorsId });
 	};
 
 	const deleteAuthorHandler = (authorId, authorName) => {
@@ -81,6 +69,15 @@ const CreateCourse = (props) => {
 		setAddAuthors(addAuthors.filter((author) => author.id !== authorId));
 	};
 
+	const addAuthorsToFormDetails = () => {
+		// returns all author IDs for course
+		let authorsId = [];
+		addAuthors.forEach((author) => {
+			authorsId.push(author.id);
+		});
+		return authorsId;
+	};
+
 	const durationHandler = (event) => {
 		// Handles duration to be converted to show on the page
 		// and update the hours in formDetails to be converted later
@@ -90,6 +87,7 @@ const CreateCourse = (props) => {
 		setCalculateDuration(timeGenerator(hours));
 		setFormDetails({
 			...formDetails,
+			authors: addAuthorsToFormDetails(),
 			duration: hours,
 			id: 'id' + Math.random().toString(16).slice(2),
 			creationDate: today.split('-').reverse().join('/'),
