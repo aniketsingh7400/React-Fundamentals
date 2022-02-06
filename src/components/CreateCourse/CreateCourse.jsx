@@ -119,6 +119,7 @@ const CreateCourse = (props) => {
 		<div className='create-course'>
 			<div className='create-course-title'>
 				<Input
+					textType='text'
 					labelText='Title'
 					placeholderText='Enter title...'
 					textChangeHandler={(event) =>
@@ -145,6 +146,7 @@ const CreateCourse = (props) => {
 					<div className='create-course-add-author-create-author'>
 						<strong>Add author</strong>
 						<Input
+							textType='text'
 							labelText='Author name'
 							placeholderText='Enter author name...'
 							textChangeHandler={createAuthorChange}
@@ -173,6 +175,7 @@ const CreateCourse = (props) => {
 					<div className='create-course-add-author-added-duration'>
 						<strong>Duration</strong>
 						<Input
+							textType='number'
 							labelText='Duration'
 							placeholderText='Enter duration in minutes...'
 							textChangeHandler={durationHandler}

@@ -1,23 +1,23 @@
 import React from 'react';
 import './Input.css';
 
-const Input = (props) => {
-	return props.labelText ? (
+const Input = ({ labelText, textType, placeholderText, textChangeHandler }) => {
+	return labelText ? (
 		<div className='input'>
-			<label htmlFor={props.labelText}>{props.labelText}</label>
+			<label htmlFor={labelText}>{labelText}</label>
 			<input
-				type={props.textType}
-				id={props.labelText}
-				placeholder={props.placeholderText}
-				onChange={props.textChangeHandler}
+				type={textType}
+				id={labelText}
+				placeholder={placeholderText}
+				onChange={textChangeHandler}
 			/>
 		</div>
 	) : (
 		<input
 			className='input'
-			type={props.textType}
-			placeholder={props.placeholderText}
-			onChange={props.textChangeHandler}
+			type={textType}
+			placeholder={placeholderText}
+			onChange={textChangeHandler}
 		/>
 	);
 };
