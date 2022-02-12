@@ -1,0 +1,43 @@
+.courseinfo {
+    margin: 1rem;
+    border: 2px solid skyblue;
+}
+
+.courseinfo-container {
+    margin: 1rem;
+}
+
+.courseinfo-container .link {
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem;
+}
+
+.courseinfo-container .link:hover {
+    color: white;
+    background-color: gray;
+}
+
+.courseinfo-container .link:active {
+    background-color: darkgray;
+}
+
+.courseinfo-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.description,
+.authors {
+    width: 50vw;
+}
+
+.authors p {
+    margin: 0 0 1rem 10rem;
+}
+
+.authors {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
