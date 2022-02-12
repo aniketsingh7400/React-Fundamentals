@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import validator from 'validator';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,6 +11,11 @@ const Login = () => {
 	const [userLoginDetails, setUserLoginDetails] = useState({
 		email: '',
 		password: '',
+	});
+
+	useEffect(() => {
+		// Redirects to Courses page if user is already logged in
+		if (localStorage.length > 0) navigate('/courses');
 	});
 
 	const loginDetailsSubmit = (event) => {
@@ -26,7 +31,6 @@ const Login = () => {
 				.post('http://localhost:3000/login', userLoginDetails)
 				.then((res) => {
 					localStorage.setItem('userData', JSON.stringify(res));
-					alert('Login successful !');
 					navigate('/courses');
 				})
 				.catch((err) => alert('Oops!! Entered wrong email or password'));
@@ -34,39 +38,35 @@ const Login = () => {
 	};
 
 	return (
-		// Renders only if token is not present in local storage.
-		localStorage.length < 1 && (
-			<form onSubmit={loginDetailsSubmit} className='login'>
-				<h2>Login</h2>
-				<Input
-					textType='email'
-					labelText='Email'
-					placeholderText='Enter email'
-					textChangeHandler={(event) =>
-						setUserLoginDetails({
-							...userLoginDetails,
-							email: event.target.value,
-						})
-					}
-				/>
-				<Input
-					textType='password'
-					labelText='Password'
-					placeholderText='Enter password'
-					textChangeHandler={(event) =>
-						setUserLoginDetails({
-							...userLoginDetails,
-							password: event.target.value,
-						})
-					}
-				/>
-				<Button buttonText='Login' buttonType='submit' />
-				<p>
-					If you not have an account you can{' '}
-					<Link to='/register'>Register</Link>
-				</p>
-			</form>
-		)
+		<form onSubmit={loginDetailsSubmit} className='login'>
+			<h2>Login</h2>
+			<Input
+				textType='email'
+				labelText='Email'
+				placeholderText='Enter email'
+				textChangeHandler={(event) =>
+					setUserLoginDetails({
+						...userLoginDetails,
+						email: event.target.value,
+					})
+				}
+			/>
+			<Input
+				textType='password'
+				labelText='Password'
+				placeholderText='Enter password'
+				textChangeHandler={(event) =>
+					setUserLoginDetails({
+						...userLoginDetails,
+						password: event.target.value,
+					})
+				}
+			/>
+			<Button buttonText='Login' buttonType='submit' />
+			<p>
+				If you not have an account you can <Link to='/register'>Register</Link>
+			</p>
+		</form>
 	);
 };
 

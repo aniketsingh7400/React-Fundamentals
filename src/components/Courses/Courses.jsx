@@ -30,21 +30,18 @@ const Courses = () => {
 	};
 
 	return (
-		// Renders only if token is present in local storage.
-		localStorage.length > 0 && (
-			<div className='courses'>
-				<div className='courses-container'>
-					<SearchBar clickHandler={courseListHandler} />
-					<div className='courses-container-add-new-course'>
-						<Button
-							buttonText='Add new course'
-							onClickHandler={() => navigate('/courses/add')}
-						/>
-					</div>
+		<div className='courses'>
+			<div className='courses-container'>
+				<SearchBar clickHandler={courseListHandler} />
+				<div className='courses-container-add-new-course'>
+					<Button
+						buttonText='Add new course'
+						onClickHandler={() => navigate('/courses/add')}
+					/>
 				</div>
-				{listOfCourses}
 			</div>
-		)
+			{listOfCourses}
+		</div>
 	);
 };
 

@@ -118,101 +118,98 @@ const CreateCourse = () => {
 	};
 
 	return (
-		// Renders only if token is present in local storage.
-		localStorage.length > 0 && (
-			<div className='create-course'>
-				<div className='create-course-title'>
-					<Input
-						textType='text'
-						labelText='Title'
-						placeholderText='Enter title...'
-						textChangeHandler={(event) =>
-							setFormDetails({ ...formDetails, title: event.target.value })
-						}
-					/>
-					<Button buttonText='Create course' onClickHandler={submitHandler} />
-				</div>
-				<div className='create-course-description'>
-					<label>Description</label>
-					<textarea
-						name='description'
-						className='create-course-description-text'
-						cols='160'
-						minLength={2}
-						rows='5'
-						onChange={(event) =>
-							setFormDetails({
-								...formDetails,
-								description: event.target.value,
-							})
-						}
-					/>
-				</div>
-				<div className='create-course-add-authors'>
-					<div className='create-course-add-author-create'>
-						<div className='create-course-add-author-create-author'>
-							<strong>Add author</strong>
-							<Input
-								textType='text'
-								labelText='Author name'
-								placeholderText='Enter author name...'
-								textChangeHandler={createAuthorChange}
-							/>
-							<Button
-								buttonText='Create author'
-								onClickHandler={createAuthorHandler}
-							/>
-						</div>
-						<div className='create-course-add-author-create-list'>
-							<strong>Authors</strong>
-							{authorsList.map((author) => (
-								<div className='authors' key={author.id}>
-									<div>{author.name}</div>
-									<Button
-										buttonText='Add author'
-										onClickHandler={() =>
-											addAuthorHandler(author.id, author.name)
-										}
-									/>
-								</div>
-							))}
-						</div>
+		<div className='create-course'>
+			<div className='create-course-title'>
+				<Input
+					textType='text'
+					labelText='Title'
+					placeholderText='Enter title...'
+					textChangeHandler={(event) =>
+						setFormDetails({ ...formDetails, title: event.target.value })
+					}
+				/>
+				<Button buttonText='Create course' onClickHandler={submitHandler} />
+			</div>
+			<div className='create-course-description'>
+				<label>Description</label>
+				<textarea
+					name='description'
+					className='create-course-description-text'
+					cols='160'
+					minLength={2}
+					rows='5'
+					onChange={(event) =>
+						setFormDetails({
+							...formDetails,
+							description: event.target.value,
+						})
+					}
+				/>
+			</div>
+			<div className='create-course-add-authors'>
+				<div className='create-course-add-author-create'>
+					<div className='create-course-add-author-create-author'>
+						<strong>Add author</strong>
+						<Input
+							textType='text'
+							labelText='Author name'
+							placeholderText='Enter author name...'
+							textChangeHandler={createAuthorChange}
+						/>
+						<Button
+							buttonText='Create author'
+							onClickHandler={createAuthorHandler}
+						/>
 					</div>
-					<div className='create-course-add-author-added'>
-						<div className='create-course-add-author-added-duration'>
-							<strong>Duration</strong>
-							<Input
-								textType='number'
-								labelText='Duration'
-								placeholderText='Enter duration in minutes...'
-								textChangeHandler={durationHandler}
-							/>
-						</div>
-						<div className='create-course-add-author-added-list'>
-							<strong>Course authors</strong>
-							<div>
-								{addAuthors.length === 0
-									? 'Author list is empty'
-									: addAuthors.map((author) => (
-											<div className='authors' key={author.id}>
-												{author.name}
-												<Button
-													buttonText='Delete author'
-													onClickHandler={() =>
-														deleteAuthorHandler(author.id, author.name)
-													}
-												/>
-											</div>
-									  ))}
+					<div className='create-course-add-author-create-list'>
+						<strong>Authors</strong>
+						{authorsList.map((author) => (
+							<div className='authors' key={author.id}>
+								<div>{author.name}</div>
+								<Button
+									buttonText='Add author'
+									onClickHandler={() =>
+										addAuthorHandler(author.id, author.name)
+									}
+								/>
 							</div>
-						</div>
+						))}
 					</div>
 				</div>
-				<div className='create-course-duration'>
-					Duration: <strong>{calculateDuration}</strong> hours
+				<div className='create-course-add-author-added'>
+					<div className='create-course-add-author-added-duration'>
+						<strong>Duration</strong>
+						<Input
+							textType='number'
+							labelText='Duration'
+							placeholderText='Enter duration in minutes...'
+							textChangeHandler={durationHandler}
+						/>
+					</div>
+					<div className='create-course-add-author-added-list'>
+						<strong>Course authors</strong>
+						<div>
+							{addAuthors.length === 0
+								? 'Author list is empty'
+								: addAuthors.map((author) => (
+										<div className='authors' key={author.id}>
+											{author.name}
+											<Button
+												buttonText='Delete author'
+												onClickHandler={() =>
+													deleteAuthorHandler(author.id, author.name)
+												}
+											/>
+										</div>
+								  ))}
+						</div>
+					</div>
 				</div>
 			</div>
-		)
+			<div className='create-course-duration'>
+				Duration: <strong>{calculateDuration}</strong> hours
+			</div>
+		</div>
 	);
 };
 
