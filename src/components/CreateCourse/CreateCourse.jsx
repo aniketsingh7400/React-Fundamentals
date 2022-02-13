@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
+import { useNavigate } from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import { timeGenerator } from '../../helpers/pipeDuration';
 import './CreateCourse.css';
 
-const CreateCourse = (props) => {
+const CreateCourse = () => {
+	const navigate = useNavigate();
+
 	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
 	const [addAuthors, setAddAuthors] = useState([]);
 	const [createAuthor, setCreateAuthor] = useState('');
@@ -55,6 +58,10 @@ const CreateCourse = (props) => {
 			},
 		]);
 		setAuthorsList(authorsList.filter((author) => author.id !== authorId));
+		setFormDetails({
+			...formDetails,
+			authors: [...formDetails.authors, authorId],
+		});
 	};
 
 	const deleteAuthorHandler = (authorId, authorName) => {
@@ -67,15 +74,10 @@ const CreateCourse = (props) => {
 			},
 		]);
 		setAddAuthors(addAuthors.filter((author) => author.id !== authorId));
-	};
-
-	const addAuthorsToFormDetails = () => {
-		// returns all author IDs for course
-		let authorsId = [];
-		addAuthors.forEach((author) => {
-			authorsId.push(author.id);
+		setFormDetails({
+			...formDetails,
+			authors: formDetails.authors.filter((id) => id !== authorId),
 		});
-		return authorsId;
 	};
 
 	const durationHandler = (event) => {
@@ -87,7 +89,6 @@ const CreateCourse = (props) => {
 		setCalculateDuration(timeGenerator(hours));
 		setFormDetails({
 			...formDetails,
-			authors: addAuthorsToFormDetails(),
 			duration: hours,
 			id: 'id' + Math.random().toString(16).slice(2),
 			creationDate: today.split('-').reverse().join('/'),
@@ -96,6 +97,7 @@ const CreateCourse = (props) => {
 
 	const submitHandler = () => {
 		// Validates whether any field is missing otherwise adds to courseList
+		// If validation is successful then redirects to Courses page with updated course list.
 		if (
 			formDetails.creationDate !== '' &&
 			formDetails.description !== '' &&
@@ -107,7 +109,7 @@ const CreateCourse = (props) => {
 		) {
 			alert(`New course "${formDetails.title}" created successfully`);
 			mockedCoursesList.push(formDetails);
-			props.clickHandler();
+			navigate('/courses');
 		} else {
 			alert('All fields are required, Please, fill them all');
 		}
@@ -135,7 +137,10 @@ const CreateCourse = (props) => {
 					minLength={2}
 					rows='5'
 					onChange={(event) =>
-						setFormDetails({ ...formDetails, description: event.target.value })
+						setFormDetails({
+							...formDetails,
+							description: event.target.value,
+						})
 					}
 				/>
 			</div>
