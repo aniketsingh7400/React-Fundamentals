@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import useLocalStorageToken from '../../useLocalStorageToken';
 import validator from 'validator';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
@@ -8,6 +9,7 @@ import './Registration.css';
 
 const Registration = () => {
 	const navigate = useNavigate();
+	const token = useLocalStorageToken();
 	const [newUser, setNewUser] = useState({
 		name: '',
 		password: '',
@@ -16,7 +18,7 @@ const Registration = () => {
 
 	useEffect(() => {
 		// Redirects to Courses page if user is already logged in
-		if (localStorage.length > 0) navigate('/courses');
+		if (token) navigate('/courses');
 	});
 
 	const formDetailsSubmit = (event) => {
@@ -27,7 +29,7 @@ const Registration = () => {
 			alert('Please enter a valid name');
 		} else if (!validator.isEmail(newUser.email)) {
 			alert('Please enter a valid email address. Example: abcd@gmail.com');
-		} else if (newUser.password < 9) {
+		} else if (newUser.password.length < 8) {
 			alert('Password should be of atleast 8 characters');
 		} else {
 			axios
@@ -36,7 +38,7 @@ const Registration = () => {
 					alert('Registration successful !');
 					navigate('/login');
 				})
-				.catch((err) => alert('Email already registered !'));
+				.catch((err) => alert(err.message));
 		}
 	};
 

@@ -58,6 +58,10 @@ const CreateCourse = () => {
 			},
 		]);
 		setAuthorsList(authorsList.filter((author) => author.id !== authorId));
+		setFormDetails({
+			...formDetails,
+			authors: [...formDetails.authors, authorId],
+		});
 	};
 
 	const deleteAuthorHandler = (authorId, authorName) => {
@@ -70,15 +74,10 @@ const CreateCourse = () => {
 			},
 		]);
 		setAddAuthors(addAuthors.filter((author) => author.id !== authorId));
-	};
-
-	const addAuthorsToFormDetails = () => {
-		// returns all author IDs for course
-		let authorsId = [];
-		addAuthors.forEach((author) => {
-			authorsId.push(author.id);
+		setFormDetails({
+			...formDetails,
+			authors: formDetails.authors.filter((id) => id !== authorId),
 		});
-		return authorsId;
 	};
 
 	const durationHandler = (event) => {
@@ -90,7 +89,6 @@ const CreateCourse = () => {
 		setCalculateDuration(timeGenerator(hours));
 		setFormDetails({
 			...formDetails,
-			authors: addAuthorsToFormDetails(),
 			duration: hours,
 			id: 'id' + Math.random().toString(16).slice(2),
 			creationDate: today.split('-').reverse().join('/'),

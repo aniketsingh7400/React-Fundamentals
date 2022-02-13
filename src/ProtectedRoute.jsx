@@ -1,8 +1,10 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import useLocalStorageToken from './useLocalStorageToken';
 
 const ProtectedRoute = () => {
-	return localStorage.length > 0 ? <Outlet /> : <Navigate to='/login' />;
+	const token = useLocalStorageToken();
+	return token ? <Outlet /> : <Navigate to='/login' />;
 };
 
 export default ProtectedRoute;
