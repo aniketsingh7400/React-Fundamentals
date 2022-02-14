@@ -34,50 +34,28 @@ const CreateCourse = () => {
 			return;
 		}
 		const id = 'id' + Math.random().toString(16).slice(2);
-		setAuthorsList([
-			...authorsList,
-			{
-				id: id,
-				name: createAuthor,
-			},
-		]);
-		mockedAuthorsList.push({
-			id: id,
-			name: createAuthor,
-		});
+		setAuthorsList([...authorsList, { id: id, name: createAuthor }]);
+		mockedAuthorsList.push({ id: id, name: createAuthor });
 	};
 
-	const addAuthorHandler = (authorId, authorName) => {
+	const addAuthorHandler = (author) => {
 		// addAuthors and authorList is updated to display it in course.
 		// Stores the data in formDetails
-		setAddAuthors([
-			...addAuthors,
-			{
-				id: authorId,
-				name: authorName,
-			},
-		]);
-		setAuthorsList(authorsList.filter((author) => author.id !== authorId));
+		setAddAuthors([...addAuthors, author]);
+		setAuthorsList(
+			authorsList.filter((perAuthor) => perAuthor.id !== author.id)
+		);
 		setFormDetails({
 			...formDetails,
-			authors: [...formDetails.authors, authorId],
+			authors: [...formDetails.authors, author.id],
 		});
 	};
 
-	const deleteAuthorHandler = (authorId, authorName) => {
+	const deleteAuthorHandler = (author, index) => {
 		// Updates authorsList to get them in author list and also removes the authors from course
-		setAuthorsList([
-			...authorsList,
-			{
-				id: authorId,
-				name: authorName,
-			},
-		]);
-		setAddAuthors(addAuthors.filter((author) => author.id !== authorId));
-		setFormDetails({
-			...formDetails,
-			authors: formDetails.authors.filter((id) => id !== authorId),
-		});
+		setAuthorsList([...authorsList, author]);
+		addAuthors.splice(index, 1);
+		formDetails.authors.splice(index, 1);
 	};
 
 	const durationHandler = (event) => {
@@ -90,12 +68,14 @@ const CreateCourse = () => {
 		setFormDetails({
 			...formDetails,
 			duration: hours,
-			id: 'id' + Math.random().toString(16).slice(2),
 			creationDate: today.split('-').reverse().join('/'),
 		});
 	};
 
 	const submitHandler = () => {
+		// Setting Course ID for formDetails
+		formDetails.id = 'id' + Math.random().toString(16).slice(2);
+
 		// Validates whether any field is missing otherwise adds to courseList
 		// If validation is successful then redirects to Courses page with updated course list.
 		if (
@@ -161,14 +141,12 @@ const CreateCourse = () => {
 					</div>
 					<div className='create-course-add-author-create-list'>
 						<strong>Authors</strong>
-						{authorsList.map((author) => (
+						{authorsList.map((author, index) => (
 							<div className='authors' key={author.id}>
 								<div>{author.name}</div>
 								<Button
 									buttonText='Add author'
-									onClickHandler={() =>
-										addAuthorHandler(author.id, author.name)
-									}
+									onClickHandler={() => addAuthorHandler(author, index)}
 								/>
 							</div>
 						))}
@@ -189,13 +167,13 @@ const CreateCourse = () => {
 						<div>
 							{addAuthors.length === 0
 								? 'Author list is empty'
-								: addAuthors.map((author) => (
+								: addAuthors.map((author, index) => (
 										<div className='authors' key={author.id}>
 											{author.name}
 											<Button
 												buttonText='Delete author'
 												onClickHandler={() =>
-													deleteAuthorHandler(author.id, author.name)
+													deleteAuthorHandler(author, index)
 												}
 											/>
 										</div>
