@@ -17,13 +17,14 @@ const persistedState = localStorage.getItem('reduxState')
 	: {};
 
 // Created a composed enhancer for redux store
-const composedEnhancer = compose(
-	applyMiddleware(thunk),
-	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // Creating redux store
-const store = createStore(rootReducer, persistedState, composedEnhancer);
+const store = createStore(
+	rootReducer,
+	persistedState,
+	composeEnhancer(applyMiddleware(thunk))
+);
 
 // Subscribing store
 store.subscribe(() => {
