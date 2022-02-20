@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import validator from 'validator';
 import { Link, useNavigate } from 'react-router-dom';
-import useLocalStorageToken from '../../useLocalStorageToken';
+import { userLogin } from '../../services';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../../store/selectors';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import './Login.css';
 
 const Login = () => {
 	const navigate = useNavigate();
-	const token = useLocalStorageToken();
+	const dispatch = useDispatch();
+	const storeUser = useSelector(getUser);
 	const [userLoginDetails, setUserLoginDetails] = useState({
 		email: '',
 		password: '',
@@ -17,7 +19,7 @@ const Login = () => {
 
 	useEffect(() => {
 		// Redirects to Courses page if user is already logged in
-		if (token) navigate('/courses');
+		if (storeUser && storeUser.isAuth) navigate('/courses');
 	});
 
 	const loginDetailsSubmit = (event) => {
@@ -29,13 +31,7 @@ const Login = () => {
 		} else if (userLoginDetails.password.length < 8) {
 			alert('Password should be of atleast 8 characters');
 		} else {
-			axios
-				.post('http://localhost:3000/login', userLoginDetails)
-				.then((res) => {
-					localStorage.setItem('userData', JSON.stringify(res));
-					navigate('/courses');
-				})
-				.catch((err) => alert(err.message));
+			dispatch(userLogin(userLoginDetails)); // post request from services.js
 		}
 	};
 

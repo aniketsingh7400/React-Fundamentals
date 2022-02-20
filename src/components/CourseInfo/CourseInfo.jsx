@@ -1,24 +1,25 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import { timeGenerator } from '../../helpers/pipeDuration';
+import { getAuthors, getCourses } from '../../store/selectors';
 import './CourseInfo.css';
 
 const CourseInfo = () => {
-	const courseList = mockedCoursesList;
-	const authorList = mockedAuthorsList;
+	const storeCourses = useSelector(getCourses);
+	const storeAuthors = useSelector(getAuthors);
 	const { courseId } = useParams();
 	let thisCourse = {};
 
 	// Gets the selected course, based on the course ID and set it's value to thisCourse object
-	courseList.forEach((course) => {
+	storeCourses.forEach((course) => {
 		if (course.id === courseId) thisCourse = { ...course };
 	});
 
 	// Collects all the relevant author names of the selected course in authors list
 	let authors = [];
 	thisCourse.authors.forEach((id) => {
-		authorList.forEach((author) => {
+		storeAuthors.forEach((author) => {
 			if (id === author.id) authors.push(author);
 		});
 	});
