@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { useNavigate } from 'react-router-dom';
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
+import { authorAdded } from '../../store/authors/actionCreators';
+import { courseAdded } from '../../store/courses/actionCreators';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuthors } from '../../store/selectors';
 import { timeGenerator } from '../../helpers/pipeDuration';
 import './CreateCourse.css';
 
 const CreateCourse = () => {
 	const navigate = useNavigate();
-
-	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
+	const storeAuthors = useSelector(getAuthors);
+	const [authorsList, setAuthorsList] = useState(storeAuthors);
+	const dispatch = useDispatch();
 	const [addAuthors, setAddAuthors] = useState([]);
 	const [createAuthor, setCreateAuthor] = useState('');
 	const [calculateDuration, setCalculateDuration] = useState('00:00');
@@ -28,14 +32,15 @@ const CreateCourse = () => {
 	};
 
 	const createAuthorHandler = () => {
-		// Validates the author input and updates the authorsList as well as mockedAuthorsList
+		// Validates the author input and updates the authorsList as well as add author in store
 		if (createAuthor.length < 2) {
 			alert('Please enter atleast 2 characters...');
 			return;
 		}
 		const id = 'id' + Math.random().toString(16).slice(2);
-		setAuthorsList([...authorsList, { id: id, name: createAuthor }]);
-		mockedAuthorsList.push({ id: id, name: createAuthor });
+		const author = { name: createAuthor, id: id };
+		setAuthorsList([...authorsList, author]);
+		dispatch(authorAdded(author));
 	};
 
 	const addAuthorHandler = (author) => {
@@ -78,6 +83,7 @@ const CreateCourse = () => {
 
 		// Validates whether any field is missing otherwise adds to courseList
 		// If validation is successful then redirects to Courses page with updated course list.
+		// Add new course to the store
 		if (
 			formDetails.creationDate !== '' &&
 			formDetails.description !== '' &&
@@ -88,7 +94,7 @@ const CreateCourse = () => {
 			formDetails.description.length >= 2
 		) {
 			alert(`New course "${formDetails.title}" created successfully`);
-			mockedCoursesList.push(formDetails);
+			dispatch(courseAdded(formDetails));
 			navigate('/courses');
 		} else {
 			alert('All fields are required, Please, fill them all');
