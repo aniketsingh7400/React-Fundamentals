@@ -20,3 +20,10 @@ export const courseDeleted = (courseId) => ({
 		courseId,
 	},
 });
+
+export const courseUpdated = (course) => ({
+	type: actions.COURSE_UPDATED,
+	payload: {
+		course,
+	},
+});

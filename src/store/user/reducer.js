@@ -5,7 +5,7 @@ const userInitialState = {
 	name: '', // default value - empty string. After success login - name of user
 	email: '', // default value - empty string. After success login - email of user
 	token: '', // default value - empty string or token value from localStorage.
-	// After success login - value from API /login response. See Swagger.
+	role: '', // default value - empty string or set role as 'admin' / 'user' based on current user.
 };
 
 const userReducer = (state = userInitialState, action) => {
@@ -23,6 +23,11 @@ const userReducer = (state = userInitialState, action) => {
 				name: action.payload.name,
 				email: action.payload.email,
 				token: action.payload.token,
+			};
+		case actions.GET_THE_CURRENT_USER:
+			return {
+				...state,
+				role: action.payload.role,
 			};
 		default:
 			return state;

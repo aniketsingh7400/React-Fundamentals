@@ -3,7 +3,7 @@ import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorageToken from '../../useLocalStorageToken';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLoggedOut } from '../../store/user/actionCreators';
+import { userLogout } from '../../store/user/thunk';
 import { getUser } from '../../store/selectors';
 import './Header.css';
 
@@ -14,11 +14,8 @@ const Header = () => {
 	const dispatch = useDispatch();
 
 	const onLogout = () => {
-		// Updates store with logged out details
-		// Clears the local storage, so no logged in token is left
-		dispatch(userLoggedOut());
-		localStorage.clear();
-		navigate('/login');
+		// Calls Logout endpoint
+		dispatch(userLogout(token, navigate));
 	};
 
 	return (

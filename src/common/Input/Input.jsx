@@ -1,7 +1,13 @@
 import React from 'react';
 import './Input.css';
 
-const Input = ({ labelText, textType, placeholderText, textChangeHandler }) => {
+const Input = ({
+	labelText,
+	textType,
+	placeholderText,
+	inputValue,
+	textChangeHandler,
+}) => {
 	return labelText ? (
 		<div className='input'>
 			<label htmlFor={labelText}>{labelText}</label>
@@ -9,6 +15,7 @@ const Input = ({ labelText, textType, placeholderText, textChangeHandler }) => {
 				type={textType}
 				id={labelText}
 				placeholder={placeholderText}
+				value={inputValue}
 				onChange={textChangeHandler}
 			/>
 		</div>

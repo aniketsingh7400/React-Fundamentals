@@ -1,46 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { addCourse, updateCourse } from '../../store/courses/thunk';
+import { addAuthor } from '../../store/authors/thunk';
+import { timeGenerator } from '../../helpers/pipeDuration';
+import { getAuthors, getCourses } from '../../store/selectors';
+import useLocalStorageToken from '../../useLocalStorageToken';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { useNavigate } from 'react-router-dom';
-import { authorAdded } from '../../store/authors/actionCreators';
-import { courseAdded } from '../../store/courses/actionCreators';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAuthors } from '../../store/selectors';
-import { timeGenerator } from '../../helpers/pipeDuration';
-import './CreateCourse.css';
+import './CourseForm.css';
 
-const CreateCourse = () => {
+const CourseForm = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { courseId } = useParams();
+	const token = useLocalStorageToken();
 	const storeAuthors = useSelector(getAuthors);
 	const [authorsList, setAuthorsList] = useState(storeAuthors);
-	const dispatch = useDispatch();
 	const [addAuthors, setAddAuthors] = useState([]);
 	const [createAuthor, setCreateAuthor] = useState('');
 	const [calculateDuration, setCalculateDuration] = useState('00:00');
 	const [formDetails, setFormDetails] = useState({
-		id: '',
 		title: '',
 		description: '',
-		creationDate: '',
 		duration: '',
 		authors: [],
 	});
 
+	// Gets the user based on id for updation
+	const updateCourseDetail = useSelector(getCourses).filter(
+		(course) => course.id === courseId
+	);
+
+	// Prefills the form data for updatation of course on clicking update course button
+	useEffect(() => {
+		if (updateCourseDetail.length) {
+			setFormDetails({
+				...formDetails,
+				title: updateCourseDetail[0].title,
+				description: updateCourseDetail[0].description,
+				duration: updateCourseDetail[0].duration,
+				authors: updateCourseDetail[0].authors,
+			});
+
+			setCalculateDuration(timeGenerator(updateCourseDetail[0].duration));
+
+			setAuthorsList(
+				authorsList.filter(function (author) {
+					return !updateCourseDetail[0].authors.includes(author.id);
+				})
+			);
+
+			setAddAuthors(
+				authorsList.filter(function (author) {
+					return updateCourseDetail[0].authors.includes(author.id);
+				})
+			);
+		}
+	}, []);
+
+	// Author input will be stored in createAuthor if any changes takes place
 	const createAuthorChange = (event) => {
-		// Author input will be stored in createAuthor if any changes takes place
 		setCreateAuthor(event.target.value);
 	};
 
 	const createAuthorHandler = () => {
-		// Validates the author input and updates the authorsList as well as add author in store
+		// Validates the author input and updates the authorsList in store
+		// also updates add author in store using dispatch method
 		if (createAuthor.length < 2) {
 			alert('Please enter atleast 2 characters...');
 			return;
 		}
-		const id = 'id' + Math.random().toString(16).slice(2);
-		const author = { name: createAuthor, id: id };
-		setAuthorsList([...authorsList, author]);
-		dispatch(authorAdded(author));
+		const author = { name: createAuthor };
+
+		// Checks for duplicate author creation
+		let duplicateAuthor = false;
+		authorsList.forEach((author) => {
+			if (author.name.toLowerCase() === createAuthor.toLowerCase()) {
+				alert(`Author ${createAuthor} already exists`);
+				duplicateAuthor = true;
+			}
+		});
+		if (!duplicateAuthor) {
+			dispatch(addAuthor(author, token, authorsList, setAuthorsList));
+		}
 	};
 
 	const addAuthorHandler = (author) => {
@@ -67,35 +110,28 @@ const CreateCourse = () => {
 		// Handles duration to be converted to show on the page
 		// and update the hours in formDetails to be converted later
 		// And updates the formDetails
-		const today = new Date().toISOString().slice(0, 10);
 		const hours = event.target.value;
 		setCalculateDuration(timeGenerator(hours));
 		setFormDetails({
 			...formDetails,
-			duration: hours,
-			creationDate: today.split('-').reverse().join('/'),
+			duration: parseInt(hours),
 		});
 	};
 
 	const submitHandler = () => {
-		// Setting Course ID for formDetails
-		formDetails.id = 'id' + Math.random().toString(16).slice(2);
-
 		// Validates whether any field is missing otherwise adds to courseList
 		// If validation is successful then redirects to Courses page with updated course list.
-		// Add new course to the store
+		// Add new course or Updates existing course based on Admin's action.
 		if (
-			formDetails.creationDate !== '' &&
 			formDetails.description !== '' &&
 			formDetails.duration !== '' &&
-			formDetails.id !== '' &&
 			formDetails.title !== '' &&
 			formDetails.authors.length !== 0 &&
 			formDetails.description.length >= 2
 		) {
-			alert(`New course "${formDetails.title}" created successfully`);
-			dispatch(courseAdded(formDetails));
-			navigate('/courses');
+			updateCourseDetail.length
+				? dispatch(updateCourse(formDetails, token, navigate, courseId))
+				: dispatch(addCourse(formDetails, token, navigate));
 		} else {
 			alert('All fields are required, Please, fill them all');
 		}
@@ -107,12 +143,18 @@ const CreateCourse = () => {
 				<Input
 					textType='text'
 					labelText='Title'
+					inputValue={formDetails.title}
 					placeholderText='Enter title...'
 					textChangeHandler={(event) =>
 						setFormDetails({ ...formDetails, title: event.target.value })
 					}
 				/>
-				<Button buttonText='Create course' onClickHandler={submitHandler} />
+				<Button
+					buttonText={
+						updateCourseDetail.length ? 'Update course' : 'Create course'
+					}
+					onClickHandler={submitHandler}
+				/>
 			</div>
 			<div className='create-course-description'>
 				<label>Description</label>
@@ -122,6 +164,7 @@ const CreateCourse = () => {
 					cols='160'
 					minLength={2}
 					rows='5'
+					defaultValue={formDetails.description}
 					onChange={(event) =>
 						setFormDetails({
 							...formDetails,
@@ -164,6 +207,7 @@ const CreateCourse = () => {
 						<Input
 							textType='number'
 							labelText='Duration'
+							inputValue={formDetails.duration}
 							placeholderText='Enter duration in minutes...'
 							textChangeHandler={durationHandler}
 						/>
@@ -195,4 +239,4 @@ const CreateCourse = () => {
 	);
 };
 
-export default CreateCourse;
+export default CourseForm;
