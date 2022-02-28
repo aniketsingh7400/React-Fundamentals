@@ -4,15 +4,20 @@ import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { courseDeleted } from '../../store/courses/actionCreators';
-import { fetchCourses, fetchAuthors } from '../../services';
-import { getCourses } from '../../store/selectors';
+import useLocalStorageToken from '../../useLocalStorageToken';
+import { fetchCourses } from '../../store/courses/thunk';
+import { fetchAuthors } from '../../store/authors/thunk';
+import { deleteCourse } from '../../store/courses/thunk';
+import { getCourses, getUser } from '../../store/selectors';
 import './Courses.css';
 
 const Courses = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const token = useLocalStorageToken();
 	const storeCourses = useSelector(getCourses);
+	const storeUser = useSelector(getUser);
+	const userRole = storeUser.role;
 	const [coursesList, setCoursesList] = useState(storeCourses);
 
 	// Calls the API from services.js to fetch the data for getting courses and authors.
@@ -36,9 +41,9 @@ const Courses = () => {
 			key={course.id}
 			course={course}
 			onDeleteHandler={() => {
-				coursesList.splice(index, 1);
-				setCoursesList(coursesList);
-				dispatch(courseDeleted(course.id));
+				dispatch(
+					deleteCourse(course.id, token, coursesList, setCoursesList, index)
+				);
 			}}
 		/>
 	));
@@ -61,12 +66,16 @@ const Courses = () => {
 		<div className='courses'>
 			<div className='courses-container'>
 				<SearchBar clickHandler={courseListHandler} />
-				<div className='courses-container-add-new-course'>
-					<Button
-						buttonText='Add new course'
-						onClickHandler={() => navigate('/courses/add')}
-					/>
-				</div>
+
+				{/* Displays the Add new course button only for Admin */}
+				{userRole === 'admin' && (
+					<div className='courses-container-add-new-course'>
+						<Button
+							buttonText='Add new course'
+							onClickHandler={() => navigate('/courses/add')}
+						/>
+					</div>
+				)}
 			</div>
 			{listOfCourses}
 		</div>

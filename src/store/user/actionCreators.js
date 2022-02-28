@@ -17,3 +17,10 @@ export const userLoggedOut = () => ({
 		token: '',
 	},
 });
+
+export const getTheCurrentUser = (role) => ({
+	type: actions.GET_THE_CURRENT_USER,
+	payload: {
+		role,
+	},
+});

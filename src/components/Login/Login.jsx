@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import validator from 'validator';
 import { Link, useNavigate } from 'react-router-dom';
-import { userLogin } from '../../services';
+import { getCurrentUser, userLogin } from '../../store/user/thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../../store/selectors';
+import useLocalStorageToken from '../../useLocalStorageToken';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import './Login.css';
@@ -12,6 +13,7 @@ const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const storeUser = useSelector(getUser);
+	const token = useLocalStorageToken();
 	const [userLoginDetails, setUserLoginDetails] = useState({
 		email: '',
 		password: '',
@@ -19,8 +21,12 @@ const Login = () => {
 
 	useEffect(() => {
 		// Redirects to Courses page if user is already logged in
-		if (storeUser && storeUser.isAuth) navigate('/courses');
-	});
+		// Calls API to get current user
+		if (storeUser && storeUser.isAuth) {
+			navigate('/courses');
+			dispatch(getCurrentUser(token));
+		}
+	}, [storeUser]);
 
 	const loginDetailsSubmit = (event) => {
 		// Validates login form details i.e. email and password on submit of form
@@ -31,7 +37,7 @@ const Login = () => {
 		} else if (userLoginDetails.password.length < 8) {
 			alert('Password should be of atleast 8 characters');
 		} else {
-			dispatch(userLogin(userLoginDetails)); // post request from services.js
+			dispatch(userLogin(userLoginDetails)); // post API request using redux thunk
 		}
 	};
 

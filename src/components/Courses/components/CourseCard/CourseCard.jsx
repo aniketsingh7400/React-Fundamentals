@@ -4,7 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getAuthors } from '../../../../store/selectors';
+import { getAuthors, getUser } from '../../../../store/selectors';
 import { timeGenerator } from '../../../../helpers/pipeDuration';
 import './CourseCard.css';
 
@@ -12,6 +12,8 @@ const CourseCard = (props) => {
 	const authorsList = [];
 	const navigate = useNavigate();
 	const storeAuthors = useSelector(getAuthors);
+	const storeUser = useSelector(getUser);
+	const userRole = storeUser.role;
 
 	//gets the list of authors name
 	storeAuthors.forEach((author) =>
@@ -51,11 +53,22 @@ const CourseCard = (props) => {
 						buttonText='Show course'
 						onClickHandler={() => navigate(`/courses/${props.course.id}`)}
 					/>
-					<Button buttonText={<EditIcon fontSize='small' />} />
-					<Button
-						buttonText={<DeleteIcon fontSize='small' />}
-						onClickHandler={props.onDeleteHandler}
-					/>
+
+					{/* Displays Edit and Delete course button for only Admin */}
+					{userRole === 'admin' && (
+						<>
+							<Button
+								buttonText={<EditIcon fontSize='small' />}
+								onClickHandler={() =>
+									navigate(`/courses/update/${props.course.id}`)
+								}
+							/>
+							<Button
+								buttonText={<DeleteIcon fontSize='small' />}
+								onClickHandler={props.onDeleteHandler}
+							/>
+						</>
+					)}
 				</div>
 			</div>
 		</div>
