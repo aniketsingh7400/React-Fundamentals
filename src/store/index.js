@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import userReducer from './user/reducer';
 
 // Combine all reducers in rootReducer
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
 	authorsReducer,
 	coursesReducer,
 	userReducer,

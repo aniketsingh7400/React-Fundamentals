@@ -26,7 +26,7 @@ const Header = () => {
 			</div>
 			{token && (
 				<div className='header-username'>
-					<strong>{storeUser.name}</strong>
+					<strong data-testid='user-name'>{storeUser.name}</strong>
 					<Button buttonText='Logout' onClickHandler={onLogout} />
 				</div>
 			)}
