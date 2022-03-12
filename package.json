@@ -27,7 +27,7 @@
     "eslint": "eslint --ext .js --ext .jsx src",
     "eslint:fix": "eslint --fix --ext .js --ext .jsx src",
     "test:nowatch": "react-scripts test --watchAll=false",
-    "prepare": "husky install",
+    "prepare": "husky install && chmod ug+x .husky/*",
     "prepublish": "npm run eslint:fix && npm run test:nowatch"
   },
   "eslintConfig": {
