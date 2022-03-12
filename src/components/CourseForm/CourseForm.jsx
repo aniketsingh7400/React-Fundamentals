@@ -138,7 +138,7 @@ const CourseForm = () => {
 	};
 
 	return (
-		<div className='create-course'>
+		<div className='create-course' data-testid='create-course'>
 			<div className='create-course-title'>
 				<Input
 					textType='text'

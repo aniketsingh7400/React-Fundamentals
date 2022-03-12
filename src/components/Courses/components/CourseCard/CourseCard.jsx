@@ -32,21 +32,25 @@ const CourseCard = (props) => {
 		// Redirects to CourseInfo page with details for particular course based on it's course ID.
 		<div className='course-card'>
 			<div className='course-card-course-details'>
-				<h1>{props.course.title}</h1>
-				<p>{props.course.description}</p>
+				<h1 data-testid='course-title'>{props.course.title}</h1>
+				<p data-testid='course-description'>{props.course.description}</p>
 			</div>
 			<div className='course-card-author-details'>
 				<p>
 					<strong>Authors: </strong>
-					{authors}
+					<span data-testid='course-authors'>{authors}</span>
 				</p>
 				<p>
 					<strong>Duration: </strong>
-					{timeGenerator(props.course.duration) + ' hours'}
+					<span data-testid='course-duration'>
+						{timeGenerator(props.course.duration) + ' hours'}
+					</span>
 				</p>
 				<p>
 					<strong>Created: </strong>
-					{props.course.creationDate}
+					<span data-testid='course-creationdate'>
+						{props.course.creationDate}
+					</span>
 				</p>
 				<div className='buttons'>
 					<Button
